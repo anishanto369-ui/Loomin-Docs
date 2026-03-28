@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: loomin-backend-v2
+    volumes:
+      - ./backend/data/db:/app/data/db
+    ports:
+      - "8000:8000"
+    restart: always
+
+  frontend:
+    image: node:18-slim
+    container_name: loomin-frontend-v2
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules    # <-- This tells Docker to use its own Linux files
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 80" # <-- This installs the Linux tools
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
