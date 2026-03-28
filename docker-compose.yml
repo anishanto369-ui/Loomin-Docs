@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./enterprise_delivery/data:/app/data
+      - ./enterprise_delivery/models:/app/models
+    environment:
+      - MODEL_PATH=/app/models/llama3-8b.gguf
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
